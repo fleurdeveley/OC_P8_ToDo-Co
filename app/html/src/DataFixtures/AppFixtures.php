@@ -38,7 +38,7 @@ class AppFixtures extends Fixture
         }
 
         // 10 tasks
-        for($i = 0; $i < 10; $i++) {
+        for($i = 1; $i <= 10; $i++) {
             $task = new Task;
 
             $task->setCreatedAt(new DateTime())
