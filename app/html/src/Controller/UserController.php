@@ -15,6 +15,8 @@ class UserController extends AbstractController
 {
     /**
      * @Route("/users", name="user_list")
+     *
+     * @IsGranted("ROLE_ADMIN")
      */
     public function listAction(UserRepository $userRepository)
     {
@@ -51,6 +53,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/{id}/edit", name="user_edit")
+     *
+     * @IsGranted("ROLE_USER")
      */
     public function editAction(User $user, Request $request, UserPasswordHasherInterface $hasher, EntityManagerInterface $em)
     {
