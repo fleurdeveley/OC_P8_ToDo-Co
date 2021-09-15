@@ -1,11 +1,19 @@
 {% extends 'base.html.twig' %}
 
+{% block header_img %}
+    <img class="slide-image" src="{{ asset('img/todolist_content.jpg') }}" alt="todo list">
+{% endblock %}
+
 {% block body %}
     <div class="row">
-        {{ form_start(form, {'action' : path('task_edit', { 'id' : task.id })}) }}
+        {{ form_start(formView, {'action' : path('task_edit', { 'id' : task.id })}) }}
         {{ form_widget(form) }}
 
-        <button type="submit" class="btn btn-success pull-right">Modifier</button>
+        <p><em>Crée par {%  if not task.user %} Anonyme {% else %} {{ task.user.username }} {% endif %} </em></p>
+
+        <button type="submit" class="btn btn-success pull-left">Modifier</button>
+        <a href="{{ path('homepage') }}" class="btn btn-primary pull-right">Retour à la gestion des tâches</a>
+
         {{ form_end(form) }}
     </div>
 {% endblock %}
