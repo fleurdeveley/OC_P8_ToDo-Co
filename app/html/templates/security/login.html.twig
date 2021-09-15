@@ -3,19 +3,29 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-    <form action="{{ path('security_login') }}" method="post">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+    {% if error %}
+        <div class="alert alert-danger my-2">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
 
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+    <div class="container">
+        <div class="row">
+            <h4 class="col-12 text-center py-2">Se connecter</h4>
+        </div>
 
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="_password" />
+        <div class="row">
+            <div class="col">
+                <form action="{{ path('security_login') }}" method="post" class="text-center">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input type="text" id="username" name="_username" value="{{ last_username }}" />
 
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="_password" />
 
-        <button class="btn btn-success" type="submit">Se connecter</button>
-    </form>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button class="btn btn-success" type="submit">Se connecter</button>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}

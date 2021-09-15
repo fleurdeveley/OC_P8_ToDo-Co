@@ -11,8 +11,8 @@
 
         <p><em>Crée par {%  if not task.user %} Anonyme {% else %} {{ task.user.username }} {% endif %} </em></p>
 
-        <button type="submit" class="btn btn-success pull-left">Modifier</button>
-        <a href="{{ path('homepage') }}" class="btn btn-primary pull-right">Retour à la gestion des tâches</a>
+        <button type="submit" class="btn btn-success pull-right">Modifier</button>
+        <a href="{{ path('homepage') }}" class="btn btn-primary pull-left">Retour à la gestion des tâches</a>
 
         {{ form_end(form) }}
     </div>
