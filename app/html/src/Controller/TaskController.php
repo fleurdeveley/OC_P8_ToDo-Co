@@ -15,8 +15,6 @@ class TaskController extends AbstractController
 {
     /**
      * @Route("/tasks", name="task_list")
-     *
-     * @IsGranted("ROLE_USER")
      */
     public function listAction(TaskRepository $taskRepository)
     {
@@ -28,8 +26,6 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/create", name="task_create")
-     *
-     * @IsGranted("ROLE_USER")
      */
     public function createAction(Request $request, EntityManagerInterface $em)
     {
@@ -53,7 +49,8 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
      *
-     * @IsGranted("ROLE_USER")
+     * @IsGranted("TASK_EDIT", subject="task", message="Tu ne peux modifier que tes propres tâches
+     * (si tu es administrateur, les tâches anonymes)")
      */
     public function editAction(Task $task, Request $request, EntityManagerInterface $em)
     {
@@ -77,6 +74,8 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
+     *
+     * @IsGranted("TASK_TOGGLE", subject="task", message="Si tu n'est pas administrateur, tu peux gérer tes propres tâches.")
      */
     public function toggleTaskAction(Task $task, EntityManagerInterface $em)
     {
@@ -91,7 +90,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
      *
-     * @IsGranted("ROLE_USER")
+     * @IsGranted("TASK_DELETE", subject="task", message="Tu peux seulement supprimer tes propres tâches.")
      */
     public function deleteTaskAction(Task $task, EntityManagerInterface $em)
     {

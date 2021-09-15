@@ -17,7 +17,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users", name="user_list")
      *
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_ADMIN", message="Tu dois être authentifié comme administrateur pour voir cette page.")
      */
     public function listAction(UserRepository $userRepository)
     {
@@ -55,7 +55,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}/edit", name="user_edit")
      *
-     * @IsGranted("ROLE_USER")
+     * @IsGranted("USER_EDIT", subject="user", message="Tu peux modifier que ton propre compte.")
      */
     public function editAction(User $user, Request $request, UserPasswordHasherInterface $hasher, EntityManagerInterface $em)
     {
@@ -75,5 +75,20 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+    }
+
+    /**
+     * @Route("/users/{id}/delete", name="user_delete")
+     * @IsGranted("USER_DELETE", subject="user", message="Tu ne peux pas supprimer des utilisateurs.")
+     */
+    public function deleteUserAction(User $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($user);
+        $em->flush();
+
+        $this->addFlash('success', 'L\'utilisateur a bien été supprimé.');
+
+        return $this->redirectToRoute('user_list');
     }
 }
