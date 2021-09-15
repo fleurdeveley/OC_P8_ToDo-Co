@@ -9,11 +9,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class TaskController extends AbstractController
 {
     /**
      * @Route("/tasks", name="task_list")
+     *
+     * @IsGranted("ROLE_USER")
      */
     public function listAction(TaskRepository $taskRepository)
     {
@@ -25,6 +28,8 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/create", name="task_create")
+     *
+     * @IsGranted("ROLE_USER")
      */
     public function createAction(Request $request, EntityManagerInterface $em)
     {
@@ -47,6 +52,8 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
+     *
+     * @IsGranted("ROLE_USER")
      */
     public function editAction(Task $task, Request $request, EntityManagerInterface $em)
     {
@@ -83,6 +90,8 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
+     *
+     * @IsGranted("ROLE_USER")
      */
     public function deleteTaskAction(Task $task, EntityManagerInterface $em)
     {
