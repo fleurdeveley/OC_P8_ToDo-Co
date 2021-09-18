@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Task;
 use App\Entity\User;
-use DateTime;
+use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -38,12 +38,13 @@ class AppFixtures extends Fixture
         }
 
         // 10 tasks
-        for($i = 0; $i < 10; $i++) {
+        for($i = 1; $i <= 10; $i++) {
             $task = new Task;
 
-            $task->setCreatedAt(new DateTime())
+            $task->setCreatedAt(new DateTimeImmutable())
+                ->setUpdatedAt(new DateTimeImmutable())
                 ->setTitle("Tâche $i")
-                ->setContent("Le contenu de ma tâche $i")
+                ->setContent("Contenu de la tâche $i")
                 ->toggle(mt_rand(0, 1))
                 ->setUser($this->faker->randomElement($this->users));
 
