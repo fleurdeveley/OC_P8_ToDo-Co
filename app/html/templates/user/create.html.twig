@@ -9,6 +9,8 @@
         {{ form_widget(form) }}
 
         <button type="submit" class="btn btn-success pull-right">Ajouter</button>
+        <a href="{{ path('user_list') }}" class="btn btn-info pull-left">Retour à la gestion des utilisateurs</a>
+
         {{ form_end(form) }}
     </div>
 {% endblock %}
