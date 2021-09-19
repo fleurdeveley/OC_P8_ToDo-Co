@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -15,6 +16,8 @@ class UserController extends AbstractController
 {
     /**
      * @Route("/users", name="user_list")
+     *
+     * @IsGranted("ROLE_ADMIN", message="Tu dois te connecter en tant qu'administrateur pour conulter cette page.")
      */
     public function listAction(UserRepository $userRepository)
     {
@@ -51,6 +54,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/{id}/edit", name="user_edit")
+     *
+     * @IsGranted("ROLE_USER", subject="user", message="Tu peux modifier que ton propre compte.")
      */
     public function editAction(User $user, Request $request, UserPasswordHasherInterface $hasher, EntityManagerInterface $em)
     {
@@ -70,5 +75,20 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+    }
+
+    /**
+     * @Route("/users/{id}/delete", name="user_delete")
+     *
+     * @IsGranted("ROLE_ADMIN", subject="user", message="Tu ne peux pas supprimer des utilisateurs.")
+     */
+    public function deleteUserAction(User $user, EntityManagerInterface $em)
+    {
+        $em->remove($user);
+        $em->flush();
+
+        $this->addFlash('success', 'L\'utilisateur a bien été supprimé.');
+
+        return $this->redirectToRoute('user_list');
     }
 }
