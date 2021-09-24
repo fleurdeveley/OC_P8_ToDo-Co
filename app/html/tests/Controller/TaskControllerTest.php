@@ -21,14 +21,18 @@ class TaskControllerTest extends WebTestCase
     /**
      * @var AbstractDatabaseTool
      */
-    protected $databaseTool;
     protected $client;
+    protected $databaseTool;
+    protected $userRepository;
+    protected $taskRepository;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->client = static::createClient();
         $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+        $this->userRepository = static::getContainer()->get(UserRepository::class);
+        $this->taskRepository = static::getContainer()->get(TaskRepository::class);
     }
 
     public function login(KernelBrowser $client, User $user)
@@ -57,8 +61,7 @@ class TaskControllerTest extends WebTestCase
         $this->databaseTool->loadFixtures([AppFixtures::class]);
 
         // Retrieve the session of the user with id = 1
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        $user = $userRepository->find(1);
+        $user = $this->userRepository->find(1);
         $this->login($this->client, $user);
 
         $this->client->request('GET', '/tasks');
@@ -70,8 +73,7 @@ class TaskControllerTest extends WebTestCase
     {
         $this->databaseTool->loadFixtures([AppFixtures::class]);
 
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        $user = $userRepository->find(1);
+        $user = $this->userRepository->find(1);
         $this->login($this->client, $user);
 
         $crawler = $this->client->request('GET', '/tasks/create');
@@ -83,12 +85,13 @@ class TaskControllerTest extends WebTestCase
         ]);
         $this->client->submit($form);
 
-        $this->assertResponseRedirects();
+        $this->assertResponseRedirects(
+            "/tasks",
+            Response::HTTP_FOUND);
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
 
-        $taskRepository = static::getContainer()->get(TaskRepository::class);
-        $task = $taskRepository->findLastTask();
+        $task = $this->taskRepository->findLastTask();
         $this->assertEquals('Nouvelle tâche', $task->getTitle());
         $this->assertEquals('Description nouvelle tâche', $task->getContent());
         $this->assertEquals(1, $task->getUser()->getId());
@@ -107,12 +110,13 @@ class TaskControllerTest extends WebTestCase
         ]);
         $this->client->submit($form);
 
-        $this->assertResponseRedirects();
+        $this->assertResponseRedirects(
+            "/tasks",
+            Response::HTTP_FOUND);
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
 
-        $taskRepository = static::getContainer()->get(TaskRepository::class);
-        $task = $taskRepository->findLastTask();
+        $task = $this->taskRepository->findLastTask();
         $this->assertEquals('Nouvelle tâche', $task->getTitle());
         $this->assertEquals('Description nouvelle tâche', $task->getContent());
         $this->assertNull($task->getUser());
@@ -122,25 +126,25 @@ class TaskControllerTest extends WebTestCase
     {
         $this->databaseTool->loadFixtures([AppFixtures::class]);
 
-        $taskRepository = static::getContainer()->get(TaskRepository::class);
-        $lastTask = $taskRepository->findLastTask();
+        $lastTask = $this->taskRepository->findLastTask();
         $id = $lastTask->getId();
 
-        $userRepository = static::getContainer()->get(UserRepository::class);
         if($lastTask->getUser()) {
-            $user = $userRepository->find($lastTask->getUser()->getId());
+            $user = $this->userRepository->find($lastTask->getUser()->getId());
         } else {
-            $user = $userRepository->find(1);
+            $user = $this->userRepository->find(1);
         }
         $this->login($this->client, $user);
 
         $crawler = $this->client->request('GET', '/tasks/' . $lastTask->getId() . '/delete');
 
-        $this->assertResponseRedirects();
+        $this->assertResponseRedirects(
+            "/tasks",
+            Response::HTTP_FOUND);
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
 
-        $task = $taskRepository->find($id);
+        $task = $this->taskRepository->find($id);
         $this->assertNull($task);
     }
 
@@ -148,26 +152,26 @@ class TaskControllerTest extends WebTestCase
     {
         $this->databaseTool->loadFixtures([AppFixtures::class]);
 
-        $taskRepository = static::getContainer()->get(TaskRepository::class);
-        $lastTask = $taskRepository->findLastTask();
+        $lastTask = $this->taskRepository->findLastTask();
         $id = $lastTask->getId();
         $isDone = $lastTask->getIsDone();
 
-        $userRepository = static::getContainer()->get(UserRepository::class);
         if($lastTask->getUser()) {
-            $user = $userRepository->find($lastTask->getUser()->getId());
+            $user = $this->userRepository->find($lastTask->getUser()->getId());
         } else {
-            $user = $userRepository->find(1);
+            $user = $this->userRepository->find(1);
         }
         $this->login($this->client, $user);
 
         $crawler = $this->client->request('GET', '/tasks/' . $lastTask->getId() . '/toggle');
 
-        $this->assertResponseRedirects();
+        $this->assertResponseRedirects(
+            "/tasks",
+            Response::HTTP_FOUND);
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
 
-        $task = $taskRepository->find($id);
+        $task = $this->taskRepository->find($id);
         $this->assertTrue($task->getIsDone() != $isDone);
     }
 
@@ -175,15 +179,13 @@ class TaskControllerTest extends WebTestCase
     {
         $this->databaseTool->loadFixtures([AppFixtures::class]);
 
-        $taskRepository = static::getContainer()->get(TaskRepository::class);
-        $lastTask = $taskRepository->findLastTask();
+        $lastTask = $this->taskRepository->findLastTask();
         $id = $lastTask->getId();
 
-        $userRepository = static::getContainer()->get(UserRepository::class);
         if($lastTask->getUser()) {
-            $user = $userRepository->find($lastTask->getUser()->getId());
+            $user = $this->userRepository->find($lastTask->getUser()->getId());
         } else {
-            $user = $userRepository->find(1);
+            $user = $this->userRepository->find(1);
         }
         $this->login($this->client, $user);
 
@@ -196,12 +198,13 @@ class TaskControllerTest extends WebTestCase
         ]);
         $this->client->submit($form);
 
-        $this->assertResponseRedirects();
+        $this->assertResponseRedirects(
+            "/tasks",
+            Response::HTTP_FOUND);
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
 
-        $taskRepository = static::getContainer()->get(TaskRepository::class);
-        $task = $taskRepository->find($id);
+        $task = $this->taskRepository->find($id);
         $this->assertEquals('Modification de la nouvelle tâche', $task->getTitle());
         $this->assertEquals('Modification de la description nouvelle tâche', $task->getContent());
     }

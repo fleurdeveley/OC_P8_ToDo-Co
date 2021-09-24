@@ -21,9 +21,17 @@ class SecurityControllerTest extends WebTestCase
     /**
      * @var AbstractDatabaseTool
      */
-    protected $databaseTool;
-
     protected $client;
+    protected $databaseTool;
+    protected $userRepository;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->client = static::createClient();
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+        $this->userRepository = static::getContainer()->get(UserRepository::class);
+    }
 
     public function login(KernelBrowser $client, User $user)
     {
@@ -35,13 +43,6 @@ class SecurityControllerTest extends WebTestCase
 
         $cookie = new Cookie($session->getName(), $session->getId());
         $client->getCookieJar()->set($cookie);
-    }
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->client = static::createClient();
-        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
     public function testLoginPageStatusCode()
@@ -69,7 +70,9 @@ class SecurityControllerTest extends WebTestCase
         ]);
         $this->client->submit($form);
 
-        $this->assertResponseRedirects();
+        $this->assertResponseRedirects(
+            "/login",
+            Response::HTTP_FOUND);
         $this->client->followRedirect();
         $this->assertSelectorTextContains('h1', 'Connectes toi.');
         $this->assertSelectorExists('.alert.alert-danger');
@@ -98,8 +101,7 @@ class SecurityControllerTest extends WebTestCase
     {
         $this->databaseTool->loadFixtures([AppFixtures::class]);
 
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        $user = $userRepository->find(1);
+        $user = $this->userRepository->find(1);
 
         $this->login($this->client, $user);
 
