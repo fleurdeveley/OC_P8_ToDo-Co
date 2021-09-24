@@ -22,7 +22,6 @@ class TaskControllerTest extends WebTestCase
      * @var AbstractDatabaseTool
      */
     protected $databaseTool;
-
     protected $client;
 
     public function setUp(): void
@@ -143,5 +142,67 @@ class TaskControllerTest extends WebTestCase
 
         $task = $taskRepository->find($id);
         $this->assertNull($task);
+    }
+
+    public function testToggleTask()
+    {
+        $this->databaseTool->loadFixtures([AppFixtures::class]);
+
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+        $lastTask = $taskRepository->findLastTask();
+        $id = $lastTask->getId();
+        $isDone = $lastTask->getIsDone();
+
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        if($lastTask->getUser()) {
+            $user = $userRepository->find($lastTask->getUser()->getId());
+        } else {
+            $user = $userRepository->find(1);
+        }
+        $this->login($this->client, $user);
+
+        $crawler = $this->client->request('GET', '/tasks/' . $lastTask->getId() . '/toggle');
+
+        $this->assertResponseRedirects();
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-success');
+
+        $task = $taskRepository->find($id);
+        $this->assertTrue($task->getIsDone() != $isDone);
+    }
+
+    public function testEditTaskWithConnectedUser()
+    {
+        $this->databaseTool->loadFixtures([AppFixtures::class]);
+
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+        $lastTask = $taskRepository->findLastTask();
+        $id = $lastTask->getId();
+
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        if($lastTask->getUser()) {
+            $user = $userRepository->find($lastTask->getUser()->getId());
+        } else {
+            $user = $userRepository->find(1);
+        }
+        $this->login($this->client, $user);
+
+        $crawler = $this->client->request('GET', '/tasks/' . $lastTask->getId() . '/edit');
+        $this->assertResponseIsSuccessful();
+
+        $form = $crawler->selectButton('Modifier')->form([
+            'task[title]' => 'Modification de la nouvelle tâche',
+            'task[content]' => 'Modification de la description nouvelle tâche'
+        ]);
+        $this->client->submit($form);
+
+        $this->assertResponseRedirects();
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-success');
+
+        $taskRepository = static::getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->find($id);
+        $this->assertEquals('Modification de la nouvelle tâche', $task->getTitle());
+        $this->assertEquals('Modification de la description nouvelle tâche', $task->getContent());
     }
 }
