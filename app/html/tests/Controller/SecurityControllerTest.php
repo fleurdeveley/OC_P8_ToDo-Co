@@ -3,47 +3,13 @@
 namespace App\Tests\Controller;
 
 use App\DataFixtures\AppFixtures;
-use App\Entity\User;
-use App\Repository\UserRepository;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\Cookie;
+use App\Tests\AbstractWebTestCase;
+use App\Tests\Traits\Login;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-class SecurityControllerTest extends WebTestCase
+class SecurityControllerTest extends AbstractWebTestCase
 {
-
-    /**
-     * @var AbstractDatabaseTool
-     */
-    protected $client;
-    protected $databaseTool;
-    protected $userRepository;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->client = static::createClient();
-        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
-        $this->userRepository = static::getContainer()->get(UserRepository::class);
-    }
-
-    public function login(KernelBrowser $client, User $user)
-    {
-        /** @var Session */
-        $session = $client->getContainer()->get('session');
-        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $session->set('_security_main', serialize($token));
-        $session->save();
-
-        $cookie = new Cookie($session->getName(), $session->getId());
-        $client->getCookieJar()->set($cookie);
-    }
+    use Login;
 
     public function testLoginPageStatusCode()
     {

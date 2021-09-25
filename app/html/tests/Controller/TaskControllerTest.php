@@ -3,48 +3,21 @@
 namespace App\Tests\Controller;
 
 use App\DataFixtures\AppFixtures;
-use App\Entity\Task;
-use App\Entity\User;
 use App\Repository\TaskRepository;
-use App\Repository\UserRepository;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\Cookie;
+use App\Tests\AbstractWebTestCase;
+use App\Tests\Traits\Login;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-class TaskControllerTest extends WebTestCase
+class TaskControllerTest extends AbstractWebTestCase
 {
-    /**
-     * @var AbstractDatabaseTool
-     */
-    protected $client;
-    protected $databaseTool;
-    protected $userRepository;
+    use Login;
+
     protected $taskRepository;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->client = static::createClient();
-        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
-        $this->userRepository = static::getContainer()->get(UserRepository::class);
         $this->taskRepository = static::getContainer()->get(TaskRepository::class);
-    }
-
-    public function login(KernelBrowser $client, User $user)
-    {
-        /** @var Session */
-        $session = $client->getContainer()->get('session');
-        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $session->set('_security_main', serialize($token));
-        $session->save();
-
-        $cookie = new Cookie($session->getName(), $session->getId());
-        $client->getCookieJar()->set($cookie);
     }
 
     public function testTaskList()
