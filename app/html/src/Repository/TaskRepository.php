@@ -29,8 +29,8 @@ class TaskRepository extends ServiceEntityRepository
 
         if(count($result) > 0) {
             return $result[0];
-        } else {
-            return $result;
         }
+
+        return $result;
     }
 }

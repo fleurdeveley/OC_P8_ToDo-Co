@@ -102,11 +102,8 @@ class TaskControllerTest extends AbstractWebTestCase
         $lastTask = $this->taskRepository->findLastTask();
         $id = $lastTask->getId();
 
-        if($lastTask->getUser()) {
-            $user = $this->userRepository->find($lastTask->getUser()->getId());
-        } else {
-            $user = $this->userRepository->find(1);
-        }
+        $user = $lastTask->getUser() ? $this->userRepository->find($lastTask->getUser()->getId())
+            : $this->userRepository->find(1);
         $this->login($this->client, $user);
 
         $crawler = $this->client->request('GET', '/tasks/' . $lastTask->getId() . '/delete');
@@ -129,11 +126,8 @@ class TaskControllerTest extends AbstractWebTestCase
         $id = $lastTask->getId();
         $isDone = $lastTask->getIsDone();
 
-        if($lastTask->getUser()) {
-            $user = $this->userRepository->find($lastTask->getUser()->getId());
-        } else {
-            $user = $this->userRepository->find(1);
-        }
+        $user = $lastTask->getUser() ? $this->userRepository->find($lastTask->getUser()->getId())
+            : $this->userRepository->find(1);
         $this->login($this->client, $user);
 
         $crawler = $this->client->request('GET', '/tasks/' . $lastTask->getId() . '/toggle');
@@ -155,11 +149,8 @@ class TaskControllerTest extends AbstractWebTestCase
         $lastTask = $this->taskRepository->findLastTask();
         $id = $lastTask->getId();
 
-        if($lastTask->getUser()) {
-            $user = $this->userRepository->find($lastTask->getUser()->getId());
-        } else {
-            $user = $this->userRepository->find(1);
-        }
+        $user = $lastTask->getUser() ? $this->userRepository->find($lastTask->getUser()->getId())
+            : $this->userRepository->find(1);
         $this->login($this->client, $user);
 
         $crawler = $this->client->request('GET', '/tasks/' . $lastTask->getId() . '/edit');
