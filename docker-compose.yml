@@ -61,6 +61,19 @@ services:
     depends_on:
       - mysql
 
+  blackfire:
+    container_name: ${COMPOSE_PROJECT_NAME}_blackfire
+    image: blackfire/blackfire:2
+    ports: [ "8307" ]
+    networks:
+      - project8
+    environment:
+      # Exposes BLACKFIRE_* environment variables from the host
+      BLACKFIRE_SERVER_ID: $BLACKFIRE_SERVER_ID
+      BLACKFIRE_SERVER_TOKEN: $BLACKFIRE_SERVER_TOKEN
+      BLACKFIRE_CLIENT_ID: $BLACKFIRE_CLIENT_ID
+      BLACKFIRE_CLIENT_TOKEN: $BLACKFIRE_CLIENT_TOKEN
+
 volumes:
   mysql-data:
 
