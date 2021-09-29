@@ -22,7 +22,7 @@ class SecurityControllerTest extends AbstractWebTestCase
     {
         $this->client->request('GET', '/login');
 
-        $this->assertSelectorTextContains('h1', 'Connectes toi');
+        $this->assertSelectorTextContains('h1', 'Se connecter');
         $this->assertSelectorNotExists('.alert.alert-danger');
     }
 
@@ -40,7 +40,7 @@ class SecurityControllerTest extends AbstractWebTestCase
             "/login",
             Response::HTTP_FOUND);
         $this->client->followRedirect();
-        $this->assertSelectorTextContains('h1', 'Connectes toi.');
+        $this->assertSelectorTextContains('h1', 'Se connecter');
         $this->assertSelectorExists('.alert.alert-danger');
     }
 

@@ -38,7 +38,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $hasher->hashPassword($user, $request->request->get('user')['password']['first']);
+            $password = $hasher->hashPassword($user, $request->request->all('user')['password']['first']);
             $user->setPassword($password);
 
             $em->persist($user);
@@ -46,7 +46,7 @@ class UserController extends AbstractController
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
@@ -64,7 +64,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $hasher->hashPassword($user, $request->request->get('user')['password']['first']);
+            $password = $hasher->hashPassword($user, $request->request->all('user')['password']['first']);
             $user->setPassword($password);
 
             $em->flush();
