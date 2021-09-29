@@ -16,7 +16,6 @@ class AbstractWebTestCase extends WebTestCase
     protected $client;
     protected $databaseTool;
     protected $userRepository;
-    protected $taskRepository;
 
     public function setUp(): void
     {
@@ -24,6 +23,5 @@ class AbstractWebTestCase extends WebTestCase
         $this->client = static::createClient();
         $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
         $this->userRepository = static::getContainer()->get(UserRepository::class);
-        $this->taskRepository = static::getContainer()->get(TaskRepository::class);
     }
 }

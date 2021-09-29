@@ -2,15 +2,14 @@
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\AbstractWebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultControllerTest extends WebTestCase
+class DefaultControllerTest extends AbstractWebTestCase
 {
     public function testIndex()
     {
-        $client = static::createClient();
-        $client->request('GET', '/');
+        $this->client->request('GET', '/');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorTextContains('h1', 'Bienvenue');
