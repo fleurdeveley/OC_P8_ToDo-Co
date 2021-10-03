@@ -19,7 +19,7 @@ class UserController extends AbstractController
      *
      * @IsGranted("ROLE_ADMIN", message="Tu dois te connecter en tant qu'administrateur pour conulter cette page.")
      */
-    public function listAction(UserRepository $userRepository)
+    public function index(UserRepository $userRepository)
     {
         return $this->render(
             'user/list.html.twig',
@@ -30,7 +30,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users/create", name="user_create")
      */
-    public function createAction(Request $request, UserPasswordHasherInterface $hasher, EntityManagerInterface $em)
+    public function create(Request $request, UserPasswordHasherInterface $hasher, EntityManagerInterface $em)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -57,7 +57,7 @@ class UserController extends AbstractController
      *
      * @IsGranted("ROLE_USER", subject="user", message="Tu peux modifier que ton propre compte.")
      */
-    public function editAction(User $user, Request $request, UserPasswordHasherInterface $hasher, EntityManagerInterface $em)
+    public function update(User $user, Request $request, UserPasswordHasherInterface $hasher, EntityManagerInterface $em)
     {
         $form = $this->createForm(UserType::class, $user);
 
@@ -82,7 +82,7 @@ class UserController extends AbstractController
      *
      * @IsGranted("ROLE_ADMIN", subject="user", message="Tu ne peux pas supprimer des utilisateurs.")
      */
-    public function deleteUserAction(User $user, EntityManagerInterface $em)
+    public function delete(User $user, EntityManagerInterface $em)
     {
         $em->remove($user);
         $em->flush();
