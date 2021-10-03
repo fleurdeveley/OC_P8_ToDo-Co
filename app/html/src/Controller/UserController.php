@@ -55,7 +55,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}/edit", name="user_edit")
      *
-     * @IsGranted("ROLE_USER", subject="user", message="Tu peux modifier que ton propre compte.")
+     * @IsGranted("USER_EDIT", subject="user", message="Tu peux modifier que ton propre compte.")
      */
     public function update(User $user, Request $request, UserPasswordHasherInterface $hasher, EntityManagerInterface $em)
     {
@@ -80,7 +80,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}/delete", name="user_delete")
      *
-     * @IsGranted("ROLE_ADMIN", subject="user", message="Tu ne peux pas supprimer des utilisateurs.")
+     * @IsGranted("USER_DELETE", subject="user", message="Tu ne peux pas supprimer des utilisateurs.")
      */
     public function delete(User $user, EntityManagerInterface $em)
     {
