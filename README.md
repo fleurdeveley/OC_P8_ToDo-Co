@@ -14,58 +14,61 @@
 ## Source
 1. Clone the GitHub repository :
 ```
-  TODO
+   git clone https://github.com/fleurdeveley/OC_P8_ToDo-Co.git
 ```
 
 ## Installation
 2. Enter the project file :
 ```
-  TODO
+  cd OC_P8_ToDo-Co
 ```
 
-3. Configurez vos variables d'environnement :
-* containers de Docker, à la racine du projet :
+3. Configure your environment variables :
+* Docker containers, at the root of the project :
 ```
-  TODO
+  cp .env.example .env
 ```
-* serveur SMTP et base de données
+* SMTP server and database :
 ```
-  TODO
+  cp app/html/vendor/.env app/html/vendor/.env.local app/html/vendor/.env.test
 ```
 
 4. Create the docker network
 ```
-  TODO
+  docker network create project8
 ```
 
 5. Launch the containers
 ```
-  TODO
+  docker-composer up -d
 ```
 
 6. Enter the PHP container to launch the commands for the database
 ```
-  TODO
+  docker exec -ti [nom du container php] bash
 ```
 
 7. Install php dependencies with composer
 ```
-  TODO
+  composer install
 ```
 
 8. Install the database
 ```
-  TODO
+  php bin/console make:migration
+```
+```
+  php bin/console doctrine:migrations:migrate
 ```
 
 9. Install the fixture (dummy data demo)
 ```
-  TODO
+  php bin/console doctrine:fixtures:load
 ```
 
 11. Leave the container
 ```
-  TODO
+  exit
 ```
 
 ## Database
