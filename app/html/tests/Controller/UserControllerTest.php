@@ -77,7 +77,7 @@ class UserControllerTest extends AbstractWebTestCase
         $userDelete = $this->userRepository->find(2);
         $this->login($this->client, $user);
 
-        $crawler = $this->client->request('GET', '/users/'. $userDelete->getId() . '/delete');
+        $this->client->request('GET', '/users/'. $userDelete->getId() . '/delete');
 
         $this->assertResponseRedirects(
             "/users",
@@ -95,7 +95,7 @@ class UserControllerTest extends AbstractWebTestCase
 
         $userDelete = $this->userRepository->find(2);
 
-        $crawler = $this->client->request('GET', '/users/'. $userDelete->getId() . '/delete');
+        $this->client->request('GET', '/users/'. $userDelete->getId() . '/delete');
 
         $this->assertResponseRedirects(
             "/login",
@@ -111,7 +111,7 @@ class UserControllerTest extends AbstractWebTestCase
         $userDelete = $this->userRepository->find(2);
         $this->login($this->client, $user);
 
-        $crawler = $this->client->request('GET', '/users/'. $userDelete->getId() . '/delete');
+        $this->client->request('GET', '/users/'. $userDelete->getId() . '/delete');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
         $this->assertSelectorTextContains('h1', 'Oups, une erreur est survenue');
