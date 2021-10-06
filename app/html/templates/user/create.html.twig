@@ -4,12 +4,19 @@
 {% block header_img %}{% endblock %}
 
 {% block body %}
-    <div class="row">
+    <div class="row m-2">
         {{ form_start(form, {'action' : path('user_create')}) }}
-        {{ form_widget(form) }}
 
-        <button type="submit" class="btn btn-success pull-right">Ajouter</button>
-        <a href="{{ path('user_list') }}" class="btn btn-info pull-left">Retour à la gestion des utilisateurs</a>
+        {{ form_row(form.username, {'row_attr': {'class': 'mb-2'}}) }}
+        {{ form_row(form.password.first, {'row_attr' : {'class' : 'mb-2'}}) }}
+        {{ form_row(form.password.second, {'row_attr' : {'class' : 'mb-2'}}) }}
+        {{ form_row(form.email, {'row_attr': {'class': 'mb-2'}}) }}
+        {{ form_row(form.roles, {'row_attr': {'class': 'mb-2'}}) }}
+
+        <div class="d-flex justify-content-between">
+            <a href="{{ path('user_list') }}" class="btn btn-primary">Retour à la gestion des utilisateurs</a>
+            <button type="submit" class="btn btn-success">Ajouter</button>
+        </div>
 
         {{ form_end(form) }}
     </div>

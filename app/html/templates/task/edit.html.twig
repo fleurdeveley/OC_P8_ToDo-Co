@@ -1,15 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="row">
-        {{ form_start(form, {'action' : path('task_edit', { 'id' : task.id })}) }}
-        {{ form_widget(form) }}
+    <div class="row m-2">
+            {{ form_start(form, {'action' : path('task_edit', { 'id' : task.id })}) }}
 
-        <p><em>Crée par {%  if not task.user %} Anonyme {% else %} {{ task.user.username }} {% endif %} </em></p>
+            {{ form_row(form.title, {'row_attr': {'class': 'mb-2'}}) }}
+            {{ form_row(form.content, {'row_attr': {'class': 'mb-2'}}) }}
 
-        <button type="submit" class="btn btn-success pull-right">Modifier</button>
-        <a href="{{ path('homepage') }}" class="btn btn-primary pull-left">Retour à la gestion des tâches</a>
+            <p><em>Crée par {%  if not task.user %} Anonyme {% else %} {{ task.user.username }} {% endif %} </em></p>
 
-        {{ form_end(form) }}
+            <div class="d-flex justify-content-between">
+                <a href="{{ path('homepage') }}" class="btn btn-primary">Retour à la gestion des tâches</a>
+                <button type="submit" class="btn btn-success">Modifier</button>
+            </div>
+
+            {{ form_end(form) }}
     </div>
 {% endblock %}

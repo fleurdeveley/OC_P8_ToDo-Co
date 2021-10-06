@@ -1,12 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="row">
+    <div class="row m-2">
         {{ form_start(form, {'action' : path('task_create')}) }}
-        {{ form_widget(form) }}
 
-        <button type="submit" class="btn btn-success pull-right">Ajouter</button>
-        <a href="{{ path('homepage') }}" class="btn btn-primary pull-left">Retour à la gestion des tâches</a>
+        {{ form_row(form.title, {'row_attr': {'class': 'mb-2'}}) }}
+        {{ form_row(form.content, {'row_attr': {'class': 'mb-2'}}) }}
+
+        <div class="d-flex justify-content-between">
+            <a href="{{ path('homepage') }}" class="btn btn-primary">Retour à la gestion des tâches</a>
+            <button type="submit" class="btn btn-success">Ajouter</button>
+        </div>
 
         {{ form_end(form) }}
     </div>

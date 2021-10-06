@@ -5,9 +5,11 @@
 {% endblock %}
 
 {% block body %}
-    <div class="row">
+    <div class="row m-2">
         {{ message }}
 
-        <a href="{{ path('homepage') }}" class="btn btn-info pull-right">Retour à la page d'accueil</a>
+        <div class="d-flex justify-content-end">
+            <a href="{{ path('homepage') }}" class="btn btn-info pull-right">Retour à la page d'accueil</a>
+        </div>
     </div>
 {% endblock %}

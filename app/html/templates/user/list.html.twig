@@ -4,14 +4,17 @@
 
 {% block header_title %}
     <h1>Liste des utilisateurs</h1>
-    <a href="{{ path('user_create') }}" class="btn btn-primary pull-right">Créer un utilisateur</a></h1>
 {% endblock %}
 
 {% block body %}
+    <div class="d-flex justify-content-end">
+        <a href="{{ path('user_create') }}" class="btn btn-primary mb-2">Créer un utilisateur</a>
+    </div>
+
     {% if users|length == 0 %}
         <div class="alert alert-warning" role="alert">
             Il n'y a pas encore d'utilisateur enregistré.
-            <a href="{{ path('user_create') }}" class="btn btn-warning pull-right">Créer un utilisateur</a>
+            <a href="{{ path('user_create') }}" class="btn btn-warning float-end">Créer un utilisateur</a>
         </div>
     {% else %}
         <div class="row">
@@ -24,6 +27,7 @@
                     <th>Actions</th>
                 </tr>
                 </thead>
+
                 <tbody>
                 {% for user in users %}
                     <tr>
@@ -31,15 +35,27 @@
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
                         <td>
-                            <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Editer</a>
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Editer</a>
 
-                            {% if app.user.id != user.id %}
-                                <a href="{{ path('user_delete', {'id' : user.id}) }}" class="btn btn-danger btn-sm">Supprimer</a>
-                            {% endif %}
+                                {% if app.user.id != user.id %}
+                                    <!-- Button trigger modal -->
+                                    <form action="{{ path('user_delete', {'id' : user.id}) }}" method="post">
+                                        <button type="button" class="trash btn btn-danger btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#modal-{{ user.id }}">
+                                            Supprimer
+                                        </button>
+                                    </form>
+
+                                    <!-- Modal user-->
+                                    {% include "user/delete.html.twig" %}
+                                {% endif %}
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}
                 </tbody>
+
             </table>
         </div>
     {% endif %}
