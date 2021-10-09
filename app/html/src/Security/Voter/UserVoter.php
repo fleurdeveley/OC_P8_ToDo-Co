@@ -11,8 +11,6 @@ class UserVoter extends Voter
 {
     protected function supports(string $attribute, $subject): bool
     {
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
         return in_array($attribute, ['USER_LIST', 'USER_EDIT', 'USER_DELETE'])
             && $subject instanceof User;
     }
