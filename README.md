@@ -6,10 +6,16 @@
 * As a part of study project, improve an existing ToDo & Co application.
 
 ## Technologies
-* TODO
+* PHP 7.4
+* Symfony 5.3
+* Composer 1.10.1
+* Git
 
 ## PHP Dependencies
-* TODO
+* [symfony/security-bundle](https://github.com/symfony/security-bundle)
+* [phpunit/phpunit](https://github.com/sebastianbergmann/phpunit)
+* [doctrine/doctrine-bundle](https://github.com/doctrine/DoctrineBundle)
+* [liip/test-fixtures-bundle](https://github.com/liip/LiipTestFixturesBundle)
 
 ## Source
 1. Clone the GitHub repository :
@@ -55,9 +61,6 @@
 
 8. Install the database
 ```
-  php bin/console make:migration
-```
-```
   php bin/console doctrine:migrations:migrate
 ```
 
@@ -72,10 +75,17 @@
 ```
 
 ## Database
-* TODO
+* Connection to PHPMyAdmin : http://localhost:8080
+* Server : project8_mysql
+* User : admin
+* Password : password
+
+## Access to ToDo & Co application
+* http://localhost:8080/
 
 ## Credentials
-* TODO
+* Login : username0
+* Password : password
 
 ## Author
 Fleur (https://github.com/fleurdeveley)
