@@ -1,15 +1,21 @@
 {% extends 'base.html.twig' %}
 
+{% block title %} To Do List app - list tasks {% endblock %}
+
 {% block header_img %}
     <img class="slide-image" src="{{ asset('img/todolist_content.jpg') }}" alt="todo list">
 {% endblock %}
 
 {% block body %}
-    <div class="text-end mb-2">
-        <a href="{{ path('task_create') }}" class="btn btn-info">Créer une tâche</a>
-    </div>
 
-    <div class="row">
+
+    <div class="row m-2">
+        <h1 class="h3 mb-3 font-weight-normal">Liste des tâches</h1>
+
+        <div class="text-end mb-2">
+            <a href="{{ path('task_create') }}" class="btn btn-info">Créer une tâche</a>
+        </div>
+
         {% for task in tasks %}
             <div class="col-sm-4 col-lg-4 col-md-4 my-3">
                 <div class="card">
@@ -53,10 +59,14 @@
                 </div>
             </div>
         {% else %}
-            <div class="alert alert-warning" role="alert">
+            <div class="alert alert-warning d-flex justify-content-end" role="alert">
                 Il n'y a pas encore de tâche enregistrée.
-                <a href="{{ path('task_create') }}" class="btn btn-warning pull-right">Créer une tâche</a>
+                <a href="{{ path('task_create') }}" class="btn btn-warning">Créer une tâche</a>
             </div>
         {% endfor %}
+
+        <div class="d-flex justify-content-start">
+            <a href="{{ path('homepage') }}" class="btn btn-info">Retour à la page d'accueil</a>
+        </div>
     </div>
 {% endblock %}

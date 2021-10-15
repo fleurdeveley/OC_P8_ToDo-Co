@@ -33,6 +33,7 @@ class UserController extends AbstractController
     public function create(Request $request, UserPasswordHasherInterface $hasher, EntityManagerInterface $em)
     {
         $user = new User();
+
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);

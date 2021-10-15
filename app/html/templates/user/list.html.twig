@@ -1,62 +1,64 @@
 {% extends 'base.html.twig' %}
 
-{% block header_img %}{% endblock %}
-
-{% block header_title %}
-    <h1>Liste des utilisateurs</h1>
-{% endblock %}
+{% block title %} To Do List app - list users {% endblock %}
 
 {% block body %}
-    <div class="d-flex justify-content-end">
-        <a href="{{ path('user_create') }}" class="btn btn-primary mb-2">Créer un utilisateur</a>
+    <div class="row m-2">
+        <h1 class="h3 mb-3 font-weight-normal">Liste des utilisateurs</h1>
+
+        {% if users|length == 0 %}
+            <div class="alert alert-warning d-flex justify-content-end" role="alert">
+                Il n'y a pas encore d'utilisateur enregistré.
+                <a href="{{ path('user_create') }}" class="btn btn-warning">Créer un utilisateur</a>
+            </div>
+        {% else %}
+            <div class="row">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nom de l'utilisateur</th>
+                            <th>Adresse email de l'utilisateur</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">
+                                            Editer
+                                        </a>
+
+                                        {% if app.user.id != user.id %}
+                                            <!-- Button trigger modal -->
+                                            <form action="{{ path('user_delete', {'id' : user.id}) }}" method="post">
+                                                <button type="button" class="trash btn btn-danger btn-sm"
+                                                        data-bs-toggle="modal" data-bs-target="#modal-{{ user.id }}">
+                                                    Supprimer
+                                                </button>
+                                            </form>
+
+                                            <!-- Modal user-->
+                                            {% include "user/delete.html.twig" %}
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        {% endif %}
+
+        <div class="d-flex justify-content-start">
+            <a href="{{ path('homepage') }}" class="btn btn-info mb-2">Retour à la page d'accueil</a>
+        </div>
     </div>
-
-    {% if users|length == 0 %}
-        <div class="alert alert-warning" role="alert">
-            Il n'y a pas encore d'utilisateur enregistré.
-            <a href="{{ path('user_create') }}" class="btn btn-warning float-end">Créer un utilisateur</a>
-        </div>
-    {% else %}
-        <div class="row">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Nom de l'utilisateur</th>
-                    <th>Adresse email de l'utilisateur</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                {% for user in users %}
-                    <tr>
-                        <th scope="row">{{ loop.index }}</th>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>
-                            <div class="d-flex justify-content-between">
-                                <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Editer</a>
-
-                                {% if app.user.id != user.id %}
-                                    <!-- Button trigger modal -->
-                                    <form action="{{ path('user_delete', {'id' : user.id}) }}" method="post">
-                                        <button type="button" class="trash btn btn-danger btn-sm" data-bs-toggle="modal"
-                                                data-bs-target="#modal-{{ user.id }}">
-                                            Supprimer
-                                        </button>
-                                    </form>
-
-                                    <!-- Modal user-->
-                                    {% include "user/delete.html.twig" %}
-                                {% endif %}
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-
-            </table>
-        </div>
-    {% endif %}
 {% endblock %}
