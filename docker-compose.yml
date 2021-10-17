@@ -65,6 +65,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_blackfire
     image: blackfire/blackfire:2
     ports: [ "8307" ]
+    restart: always
     networks:
       - project8
     environment:

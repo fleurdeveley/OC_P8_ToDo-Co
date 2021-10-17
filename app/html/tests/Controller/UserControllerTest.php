@@ -77,7 +77,7 @@ class UserControllerTest extends AbstractWebTestCase
         $userDelete = $this->userRepository->find(2);
         $this->login($this->client, $user);
 
-        $crawler = $this->client->request('GET', '/users/'. $userDelete->getId() . '/delete');
+        $this->client->request('GET', '/users/'. $userDelete->getId() . '/delete');
 
         $this->assertResponseRedirects(
             "/users",
@@ -87,5 +87,33 @@ class UserControllerTest extends AbstractWebTestCase
 
         $userDelete = $this->userRepository->find(2);
         $this->assertNull($userDelete);
+    }
+
+    public function testDeleteWithoutUserConnected()
+    {
+        $this->databaseTool->loadFixtures([AppFixtures::class]);
+
+        $userDelete = $this->userRepository->find(2);
+
+        $this->client->request('GET', '/users/'. $userDelete->getId() . '/delete');
+
+        $this->assertResponseRedirects(
+            "/login",
+            Response::HTTP_FOUND);
+        $this->client->followRedirect();
+    }
+
+    public function testDeleteUserConnected()
+    {
+        $this->databaseTool->loadFixtures([AppFixtures::class]);
+
+        $user = $this->userRepository->find(3);
+        $userDelete = $this->userRepository->find(2);
+        $this->login($this->client, $user);
+
+        $this->client->request('GET', '/users/'. $userDelete->getId() . '/delete');
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertSelectorTextContains('h1', 'Oups, une erreur est survenue');
     }
 }

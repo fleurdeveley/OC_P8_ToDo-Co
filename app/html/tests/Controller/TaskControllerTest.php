@@ -106,7 +106,7 @@ class TaskControllerTest extends AbstractWebTestCase
             : $this->userRepository->find(1);
         $this->login($this->client, $user);
 
-        $crawler = $this->client->request('GET', '/tasks/' . $lastTask->getId() . '/delete');
+        $this->client->request('GET', '/tasks/' . $lastTask->getId() . '/delete');
 
         $this->assertResponseRedirects(
             "/tasks",
@@ -130,7 +130,7 @@ class TaskControllerTest extends AbstractWebTestCase
             : $this->userRepository->find(1);
         $this->login($this->client, $user);
 
-        $crawler = $this->client->request('GET', '/tasks/' . $lastTask->getId() . '/toggle');
+        $this->client->request('GET', '/tasks/' . $lastTask->getId() . '/toggle');
 
         $this->assertResponseRedirects(
             "/tasks",

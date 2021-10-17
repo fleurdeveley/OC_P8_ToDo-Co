@@ -16,7 +16,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks", name="task_list")
      */
-    public function listAction(TaskRepository $taskRepository)
+    public function index(TaskRepository $taskRepository)
     {
         return $this->render(
             'task/list.html.twig',
@@ -27,7 +27,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/create", name="task_create")
      */
-    public function createAction(Request $request, EntityManagerInterface $em)
+    public function create(Request $request, EntityManagerInterface $em)
     {
         $task = new Task;
         $form = $this->createForm(TaskType::class, $task);
@@ -57,7 +57,7 @@ class TaskController extends AbstractController
      * @IsGranted("TASK_EDIT", subject="task", message="Tu ne peux modifier que tes propres tâches
      * (sauf si tu es administrateur : les tâches anonymes)")
      */
-    public function editAction(Task $task, Request $request, EntityManagerInterface $em)
+    public function update(Task $task, Request $request, EntityManagerInterface $em)
     {
         $form = $this->createForm(TaskType::class, $task);
 
@@ -82,7 +82,7 @@ class TaskController extends AbstractController
      *
      * @IsGranted("TASK_TOGGLE", subject="task", message="Si tu n'est pas administrateur, tu peux gérer tes propres tâches.")
      */
-    public function toggleTaskAction(Task $task, EntityManagerInterface $em)
+    public function toggle(Task $task, EntityManagerInterface $em)
     {
         $task->toggle(!$task->isDone());
         $em->flush();
@@ -97,7 +97,7 @@ class TaskController extends AbstractController
      *
      * @IsGranted("TASK_DELETE", subject="task", message="Tu peux seulement supprimer tes propres tâches.")
      */
-    public function deleteTaskAction(Task $task, EntityManagerInterface $em)
+    public function delete(Task $task, EntityManagerInterface $em)
     {
         $em->remove($task);
         $em->flush();

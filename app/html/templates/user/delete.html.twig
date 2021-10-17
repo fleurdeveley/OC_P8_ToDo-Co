@@ -1,0 +1,29 @@
+<!-- Modal user-->
+<div class="modal fade" id="modal-{{ user.id }}" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Supprimer l'utilisateur "{{ user.username }}"</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                Êtes-vous sûre de vouloir supprimer l'utilisateur "{{ user.username }}" ?
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger text-danger p-2"
+                        data-bs-dismiss="modal">
+                    Annuler
+                </button>
+                <a class="btn btn-outline-success text-success p-2"
+                   href="{{ path('user_delete', {'id' : user.id }) }}">
+                    Valider
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
