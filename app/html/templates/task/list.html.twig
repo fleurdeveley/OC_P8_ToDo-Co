@@ -1,48 +1,72 @@
 {% extends 'base.html.twig' %}
 
+{% block title %} To Do List app - list tasks {% endblock %}
+
 {% block header_img %}
     <img class="slide-image" src="{{ asset('img/todolist_content.jpg') }}" alt="todo list">
 {% endblock %}
 
 {% block body %}
-    <div class="row">
-        <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>
-    </div>
 
-    <div class="row">
+
+    <div class="row m-2">
+        <h1 class="h3 mb-3 font-weight-normal">Liste des tâches</h1>
+
+        <div class="text-end mb-2">
+            <a href="{{ path('task_create') }}" class="btn btn-info">Créer une tâche</a>
+        </div>
+
         {% for task in tasks %}
-            <div class="col-sm-4 col-lg-4 col-md-4">
-                <div class="thumbnail">
-                    <div class="caption">
-                        <h4 class="pull-right">
+            <div class="col-sm-4 col-lg-4 col-md-4 my-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="float-end">
                             {% if task.isDone %}
-                                <span class="glyphicon glyphicon-ok"></span>
+                                <i class="far fa-check-square"></i>
                             {% else %}
-                                <span class="glyphicon glyphicon-remove"></span>
+                                <i class="far fa-square"></i>
                             {% endif %}
                         </h4>
-                        <h4>
-                            <a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a>
-                        </h4>
+                        <h4>{{ task.title }}</h4>
                         <p>{{ task.content }}</p>
+                        <p><em>Crée par {%  if not task.user %} Anonyme {% else %} {{ task.user.username }} {% endif %} </em></p>
                     </div>
-                    <div>
-                        <form action="{{ path('task_toggle', {'id' : task.id }) }}">
-                            <button class="btn btn-success btn-sm pull-right">
-                                {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
+
+                    <div class="d-flex justify-content-end">
+                        {% if is_granted('TASK_EDIT', task) %}
+                            <a class="btn btn-warning btn-sm" href="{{ path('task_edit', {'id' : task.id }) }}">Editer</a>
+                        {% endif %}
+
+                        {% if is_granted('TASK_DELETE', task) %}
+                            <!-- Button trigger modal -->
+                            <form action="{{ path('task_delete', {'id' : task.id }) }}" method="post">
+                                <button type="button" class="trash btn btn-danger btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#modal-{{ task.id }}">
+                                    Supprimer
+                                </button>
+                            </form>
+
+                            <!-- Modal task-->
+                            {% include "task/delete.html.twig" %}
+                        {% endif %}
+
+                        <form action="{{ path('task_toggle', {'id' : task.id }) }}" method="post">
+                            <button class="btn btn-success btn-sm">
+                                {% if not task.isDone %} Marquer comme faite {% else %} Marquer non terminée {% endif %}
                             </button>
-                        </form>
-                        <form action="{{ path('task_delete', {'id' : task.id }) }}">
-                            <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
                         </form>
                     </div>
                 </div>
             </div>
         {% else %}
-            <div class="alert alert-warning" role="alert">
+            <div class="alert alert-warning d-flex justify-content-end" role="alert">
                 Il n'y a pas encore de tâche enregistrée.
-                <a href="{{ path('task_create') }}" class="btn btn-warning pull-right">Créer une tâche</a>
+                <a href="{{ path('task_create') }}" class="btn btn-warning">Créer une tâche</a>
             </div>
         {% endfor %}
+
+        <div class="d-flex justify-content-start">
+            <a href="{{ path('homepage') }}" class="btn btn-info">Retour à la page d'accueil</a>
+        </div>
     </div>
 {% endblock %}

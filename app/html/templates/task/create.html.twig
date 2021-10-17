@@ -1,13 +1,25 @@
 {% extends 'base.html.twig' %}
 
+{% block title %} To Do List app - create task {% endblock %}
+
+{% block header_img %}
+    <img class="slide-image" src="{{ asset('img/todolist_content.jpg') }}" alt="todo list">
+{% endblock %}
+
 {% block body %}
-    <div class="row">
+    <div class="row m-2">
+        <h1 class="h3 mb-3 font-weight-normal">Créer une tâche</h1>
+
         {{ form_start(form, {'action' : path('task_create')}) }}
-        {{ form_widget(form) }}
 
-        <button type="submit" class="btn btn-success pull-right">Ajouter</button>
+        {{ form_row(form.title, {'row_attr': {'class': 'mb-2'}}) }}
+        {{ form_row(form.content, {'row_attr': {'class': 'mb-2'}}) }}
+
+        <div class="d-flex justify-content-between">
+            <a href="{{ path('task_list') }}" class="btn btn-info">Retour à la gestion des tâches</a>
+            <button type="submit" class="btn btn-success">Ajouter</button>
+        </div>
+
         {{ form_end(form) }}
-
-        <a href="{{ path('task_list') }}" class="btn btn-primary">Retour à la liste des tâches</a>
     </div>
 {% endblock %}

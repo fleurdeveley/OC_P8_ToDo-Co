@@ -1,17 +1,36 @@
 {% extends 'base.html.twig' %}
 
+{% block title %} login {% endblock %}
+
 {% block body %}
-    {% if error %}
-        <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+    <div class="row m-2">
+        <form method="post">
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
 
-    <form action="{{ path('login_check') }}" method="post">
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+            {% if app.user %}
+                <div class="mb-3">
+                    Tu es connecté en tant que {{ app.user.username }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
+                </div>
+            {% endif %}
 
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="_password" />
+            <h1 class="h3 mb-3 font-weight-normal">Se connecter</h1>
 
-        <button class="btn btn-success" type="submit">Se connecter</button>
-    </form>
+            <label for="inputUsername">Nom de l'utilisateur</label>
+            <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control mb-2"
+                   autocomplete="username" required autofocus>
+
+            <label for="inputPassword">Mot de passe</label>
+            <input type="password" name="password" id="inputPassword" class="form-control mb-2"
+                   autocomplete="current-password" required>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <div class="d-flex justify-content-between">
+                <a href="{{ path('homepage') }}" class="btn btn-info">Retour à la page d'accueil</a>
+                <button class="btn btn-success" type="submit">Se connecter</button>
+            </div>
+        </form>
+    </div>
 {% endblock %}
