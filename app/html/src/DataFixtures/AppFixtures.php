@@ -40,8 +40,7 @@ class AppFixtures extends Fixture
 
             $user->setUsername("username$i")
                 ->setEmail("username$i@gmail.com")
-                ->setPassword($this->hasher->hashPassword($user, 'password'))
-                ->setRoles(['ROLE_USER']);
+                ->setPassword($this->hasher->hashPassword($user, 'password'));
 
             $manager->persist($user);
 
